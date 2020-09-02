@@ -16,8 +16,9 @@ use dotenv::dotenv;
 use error::AppError;
 use mongo::Mongo;
 use openssl::ssl::{SslAcceptor, SslAcceptorBuilder, SslFiletype, SslMethod};
+use serde::Serialize;
 use services::{post_service::PostService, DocumentService};
-
+use tracing::info;
 pub type Result<T, E = AppError> = core::result::Result<T, E>;
 
 /// Configuration for the application
@@ -64,6 +65,7 @@ impl AppConfig {
             }
         };
 
+<<<<<<< HEAD
         Self::create(
             dotenv::var("MONGODB_URI"),
             dotenv::var("DB_NAME"),
@@ -120,6 +122,18 @@ impl AppConfig {
             config.ssl_conf = Some(ssl_conf);
         }
         config
+=======
+        let conf = AppConfig {
+            mongo_db_uri: dotenv::var("MONGODB_URI").unwrap(),
+            db_name: dotenv::var("DB_NAME").unwrap(),
+            cert_pem: dotenv::var("CERT_PEM").unwrap(),
+            key_pem: dotenv::var("KEY_PEM").unwrap(),
+            ip_address: dotenv::var("IP_ADDRESS").unwrap(),
+        };
+
+        info!("Running with {:?}", conf);
+        conf
+>>>>>>> WIP: Set up tracing, todo: middleware
     }
 }
 
@@ -134,6 +148,7 @@ pub fn ssl_builder(cert: &str, key: &str) -> Result<SslAcceptorBuilder> {
     Ok(builder)
 }
 
+#[derive(Debug)]
 pub struct AppState {
     pub post_service: PostService,
 }

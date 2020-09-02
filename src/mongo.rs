@@ -1,6 +1,8 @@
-use super::Result;
-use crate::AppError;
 use mongodb::{bson::oid::ObjectId, Client, Database};
+
+use crate::AppError;
+
+use super::Result;
 
 #[derive(Clone)]
 pub struct Mongo {
@@ -14,8 +16,8 @@ impl Mongo {
         let main_db = client.database(db_name);
         Ok(Mongo { client, main_db })
     }
+}
 
-    pub fn to_object_id(id: &str) -> Result<ObjectId> {
-        Ok(ObjectId::with_string(id).map_err(|e| AppError::InternalServerError(e.to_string()))?)
-    }
+pub fn to_object_id(id: &str) -> Result<ObjectId> {
+    Ok(ObjectId::with_string(id).map_err(|e| AppError::InternalServerError(e.to_string()))?)
 }

@@ -6,13 +6,13 @@ use crate::{
 
 use super::super::Result;
 use actix_web::{web, HttpResponse, Responder};
+use tracing::info;
 
 pub async fn get_one(id: web::Path<String>, app: web::Data<AppState>) -> Result<impl Responder> {
     let result = app
         .post_service
         .get_one(Post::from_string_id(id.into_inner()))
         .await?;
-
     Ok(HttpResponse::Ok().json(result))
 }
 

@@ -1,4 +1,4 @@
-use crate::mongo::Mongo;
+use crate::mongo::to_object_id;
 use mongodb::bson::{doc, Document};
 use mongodb::options::UpdateModifications;
 use serde::{Deserialize, Serialize};
@@ -36,7 +36,7 @@ impl From<Post> for Document {
         }
 
         if let Some(id) = p.id {
-            if let Ok(obejct_id) = Mongo::to_object_id(id.as_str()) {
+            if let Ok(obejct_id) = to_object_id(id.as_str()) {
                 document.insert("_id", obejct_id);
             }
         }

@@ -3,6 +3,7 @@ use crate::{documents::Post, mongo::Mongo};
 use async_trait::async_trait;
 use mongodb::{bson::Document, Collection};
 
+#[derive(Debug)]
 pub struct PostService {
     col: Collection,
 }
