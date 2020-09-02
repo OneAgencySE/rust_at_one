@@ -31,7 +31,7 @@ pub trait Query {
 pub trait DocumentService<T>
 where
     T: From<Document> + Into<Document> + Into<UpdateModifications> + Send + Sync + Clone + Dto,
-    Self::Query: Into<Document> + Send + Clone + Serialize + Sync + Query,
+    Self::Query: Into<Document> + Into<Option<Document>> + Send + Clone + Serialize + Sync + Query,
 {
     type Query;
 
@@ -48,11 +48,7 @@ where
     where
         T: 'a,
     {
-        match self
-            .collection()
-            .find_one(query.clone().into(), None)
-            .await?
-        {
+        match self.collection().find_one(query.clone(), None).await? {
             Some(t) => Ok(t.into()),
             None => Err(not_found(self.name(), &query)?),
         }
@@ -64,13 +60,7 @@ where
         T: 'a,
         Self::Query: 'a,
     {
-        let options = pagination.as_find_options();
-        // TODO: use page object
-        // TODO: Validate query
-        let mut cursor = self
-            .collection()
-            .find(Some(query.into()), Some(options))
-            .await?;
+        let mut cursor = self.collection().find(query, pagination).await?;
 
         let mut results: Vec<T> = Vec::new();
         while let Some(x) = cursor.next().await {
@@ -160,25 +150,25 @@ pub struct Pagination {
     count: Option<i64>,
 }
 
-impl Pagination {
-    fn as_find_options(&self) -> FindOptions {
+impl From<Pagination> for Option<FindOptions> {
+    fn from(p: Pagination) -> Self {
         let mut options = FindOptions::default();
         options.limit = Some(PAGE_COUNT);
         options.skip = Some(PAGE_NUMBER);
 
-        if let Some(n) = self.count {
+        if let Some(n) = p.count {
             if n >= 0 {
                 options.limit = Some(n);
             }
         }
 
-        if let Some(n) = self.number {
+        if let Some(n) = p.number {
             if n >= 0 {
                 options.skip = Some(n * options.limit.unwrap());
             }
         }
 
-        options
+        Some(options)
     }
 }
 
@@ -209,7 +199,8 @@ mod tests {
         case(pagination(None, Some(10)), find_options(Some(0), Some(10)))
     )]
     fn pagination_as_find_options(input: Pagination, expected: FindOptions) {
-        let r = input.as_find_options();
+        let r: Option<FindOptions> = input.into();
+        let r = r.unwrap();
         assert_eq!(r.skip, expected.skip);
         assert_eq!(r.limit, expected.limit);
     }

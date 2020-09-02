@@ -1,16 +1,65 @@
+#[warn(missing_debug_implementations, rust_2018_idioms, missing_docs)]
+
+/// Module for documents/models
 pub mod documents;
+/// Error types
 pub mod error;
+/// Endpoint handlers
 pub mod handlers;
+/// Mongo specific logic
 pub mod mongo;
+/// Abstraction layer, data manipulation logic
 pub mod services;
 
 use actix_web::web;
+use dotenv::dotenv;
 use error::AppError;
 use mongo::Mongo;
 use openssl::ssl::{SslAcceptor, SslAcceptorBuilder, SslFiletype, SslMethod};
 use services::{post_service::PostService, DocumentService};
 
 pub type Result<T, E = AppError> = core::result::Result<T, E>;
+
+/// Configuration for the application
+#[derive(Debug)]
+pub struct AppConfig {
+    /// Mongo db connection string
+    pub mongo_db_uri: String,
+    /// Database to use
+    pub db_name: String,
+    /// SSL certificate file
+    pub cert_pem: String,
+    /// SSL key file
+    pub key_pem: String,
+    /// Start address for application
+    pub ip_address: String,
+}
+
+pub enum AppEnv<'a> {
+    Default,
+    FromFile(&'a str),
+}
+
+impl AppConfig {
+    pub fn new(env: AppEnv) -> Self {
+        match env {
+            AppEnv::Default => {
+                dotenv().ok();
+            }
+            AppEnv::FromFile(s) => {
+                dotenv::from_filename(s).ok();
+            }
+        };
+
+        AppConfig {
+            mongo_db_uri: dotenv::var("MONGODB_URI").unwrap(),
+            db_name: dotenv::var("DB_NAME").unwrap(),
+            cert_pem: dotenv::var("CERT_PEM").unwrap(),
+            key_pem: dotenv::var("KEY_PEM").unwrap(),
+            ip_address: dotenv::var("IP_ADDRESS").unwrap(),
+        }
+    }
+}
 
 // load ssl keys
 // to create a self-signed temporary cert for testing:

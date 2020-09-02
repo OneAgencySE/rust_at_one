@@ -1,12 +1,16 @@
 use crate::mongo::Mongo;
 use mongodb::bson::{doc, Document};
-use serde::{Deserialize, Serialize};
 use mongodb::options::UpdateModifications;
+use serde::{Deserialize, Serialize};
 
+/// Data model for Post
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Post {
+    /// Mongodb id: _id
     pub id: Option<String>,
+    /// Name of post
     pub name: Option<String>,
+    /// Author name
     pub author: Option<String>,
 }
 
@@ -14,7 +18,7 @@ impl From<Post> for UpdateModifications {
     fn from(p: Post) -> Self {
         let mut base_doc: Document = p.into();
         base_doc.remove("_id");
-        let document = doc!{"$set": base_doc};
+        let document = doc! {"$set": base_doc};
         UpdateModifications::Document(document)
     }
 }
@@ -62,10 +66,11 @@ impl From<Document> for Post {
     }
 }
 
+/// DTO for updating and creating new Posts
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct PostUpsert {
-    pub name: Option<String>,
-    pub author: Option<String>,
+    name: Option<String>,
+    author: Option<String>,
 }
 
 impl From<PostUpsert> for Post {

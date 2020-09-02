@@ -3,7 +3,8 @@ name = "rust_at_one"
 version = "0.1.0"
 authors = ["Alexander Herlin <alexander.herlin@outlook.com>"]
 edition = "2018"
-
+readme = "README.md"
+repository = "https://github.com/OneAgencySE/rust_at_one"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[test]]
@@ -25,3 +26,5 @@ futures-util = "0.3"
 
 [dev-dependencies]
 rstest = "0.6"
+bytes = { version = "0.5", features = ["serde"] }
+uuid = "0.8"

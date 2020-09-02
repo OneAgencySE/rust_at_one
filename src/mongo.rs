@@ -9,9 +9,9 @@ pub struct Mongo {
 }
 
 impl Mongo {
-    pub async fn initialize(connection_string: &str) -> Result<Self> {
+    pub async fn initialize(connection_string: &str, db_name: &str) -> Result<Self> {
         let client = Client::with_uri_str(connection_string).await?;
-        let main_db = client.database("rust_at_one");
+        let main_db = client.database(db_name);
         Ok(Mongo { client, main_db })
     }
 

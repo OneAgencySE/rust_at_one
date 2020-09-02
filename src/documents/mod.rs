@@ -1,1 +1,3 @@
-pub mod post;
+mod post;
+pub use post::Post;
+pub use post::PostUpsert;

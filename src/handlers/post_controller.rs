@@ -1,5 +1,5 @@
 use crate::{
-    documents::post::{Post, PostUpsert},
+    documents::{Post, PostUpsert},
     services::{DocumentService, Pagination, Query},
     AppState,
 };

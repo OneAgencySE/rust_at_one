@@ -1,7 +1,7 @@
 use super::{DocumentService, Dto, Query};
-use crate::{documents::post::Post, mongo::Mongo};
+use crate::{documents::Post, mongo::Mongo};
 use async_trait::async_trait;
-use mongodb::Collection;
+use mongodb::{bson::Document, Collection};
 
 pub struct PostService {
     col: Collection,
@@ -26,9 +26,9 @@ impl DocumentService<Post> for PostService {
     }
 }
 
-impl Dto for Post {
-    fn set_id(&mut self, id: String) {
-        self.id = Some(id)
+impl From<Post> for Option<Document> {
+    fn from(post: Post) -> Self {
+        Some(post.into())
     }
 }
 
@@ -39,5 +39,11 @@ impl Query for Post {
             name: None,
             author: None,
         }
+    }
+}
+
+impl Dto for Post {
+    fn set_id(&mut self, id: String) {
+        self.id = Some(id)
     }
 }

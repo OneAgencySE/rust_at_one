@@ -11,8 +11,11 @@ My intent is not to build something big, but instead just have a project to play
 `RUST_BACKTRACE=1;
 IP_ADDRESS=0.0.0.0:8000
 MONGODB_URI=mongodb://root:example@localhost:27017/
+DB_NAME=rust_at_one
 KEY_PEM=nopass.pem
 CERT_PEM=cert.pem`
+
+There should be a test.env in the main folder beside .env for integration testing purposes.
 
 I'm using docker with a mongo instance for local development. run `docker-compose -f stack.yml up`.
 
