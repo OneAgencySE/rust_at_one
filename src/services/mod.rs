@@ -1,6 +1,6 @@
 pub mod post_service;
 use super::Result;
-use crate::{error::AppError, mongo::Mongo};
+use crate::{error::AppError, mongo::Mongo, documents::Many};
 use async_trait::async_trait;
 use futures_util::stream::StreamExt;
 use mongodb::{
@@ -55,7 +55,7 @@ where
     }
 
     // TODO: Pagination
-    async fn get_many<'a>(&self, query: Self::Query, pagination: Pagination) -> Result<Vec<T>>
+    async fn get_many<'a>(&self, query: Self::Query, pagination: Pagination) -> Result<Many<T>>
     where
         T: 'a,
         Self::Query: 'a,
@@ -67,7 +67,7 @@ where
             results.push(x?.into())
         }
 
-        Ok(results)
+        Ok(results.into())
     }
 
     async fn delete<'a>(&self, query: Self::Query) -> Result<()>

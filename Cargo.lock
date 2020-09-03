@@ -1615,6 +1615,7 @@ dependencies = [
  "bytes",
  "dotenv",
  "dotenv_codegen",
+ "futures",
  "futures-util",
  "mongodb",
  "openssl",

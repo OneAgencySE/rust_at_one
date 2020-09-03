@@ -2,6 +2,8 @@ use crate::mongo::Mongo;
 use mongodb::bson::{doc, Document};
 use mongodb::options::UpdateModifications;
 use serde::{Deserialize, Serialize};
+use actix_web::{Responder, Error, HttpRequest, HttpResponse};
+use futures::future::{ready, Ready};
 
 /// Data model for Post
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -12,6 +14,32 @@ pub struct Post {
     pub name: Option<String>,
     /// Author name
     pub author: Option<String>,
+}
+
+pub struct Many<T>(Vec<T>);
+
+impl<T> From<Vec<T>> for Many<T> {
+    fn from(v: Vec<T>) -> Many<T> {
+        Many(v)
+    }
+}
+
+impl Responder for Many<Post> {
+    type Error = Error;
+    type Future = Ready<Result<HttpResponse, Error>>;
+    
+    fn respond_to(self, _req: &HttpRequest) -> Self::Future {
+        ready(Ok(HttpResponse::Ok().json(&self.0)))
+    }
+}
+
+impl Responder for Post {
+    type Error = Error;
+    type Future = Ready<Result<HttpResponse, Error>>;
+    
+    fn respond_to(self, _req: &HttpRequest) -> Self::Future {
+        ready(Ok(HttpResponse::Ok().json(&self)))
+    }
 }
 
 impl From<Post> for UpdateModifications {
