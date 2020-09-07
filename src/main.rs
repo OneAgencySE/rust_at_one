@@ -20,7 +20,7 @@ async fn run_application(config: AppConfig) -> Result<()> {
             .service(web::scope("/api").configure(configure_routes));
         m
     })
-    .bind_openssl(config.ip_address, ssl)?
+    .bind_openssl("0.0.0.0:8000", ssl)?
     .run()
     .await
     .map_err(|c| c.into())

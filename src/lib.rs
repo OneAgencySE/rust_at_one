@@ -31,8 +31,6 @@ pub struct AppConfig {
     pub cert_pem: String,
     /// SSL key file
     pub key_pem: String,
-    /// Start address for application
-    pub ip_address: String,
 }
 
 pub enum AppEnv<'a> {
@@ -52,11 +50,14 @@ impl AppConfig {
         };
 
         AppConfig {
-            mongo_db_uri: dotenv::var("MONGODB_URI").unwrap(),
-            db_name: dotenv::var("DB_NAME").unwrap(),
-            cert_pem: dotenv::var("CERT_PEM").unwrap(),
-            key_pem: dotenv::var("KEY_PEM").unwrap(),
-            ip_address: dotenv::var("IP_ADDRESS").unwrap(),
+            mongo_db_uri: dotenv::var("MONGODB_URI")
+                .expect("MONGODB_URI was not found in environmental variables"),
+            db_name: dotenv::var("DB_NAME")
+                .expect("DB_NAME was not found in environmental variables"),
+            cert_pem: dotenv::var("CERT_PEM")
+                .expect("CERT_PEM was not found in environmental variables"),
+            key_pem: dotenv::var("KEY_PEM")
+                .expect("KEY_PEM was not found in environmental variables"),
         }
     }
 }

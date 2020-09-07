@@ -1,24 +1,17 @@
-# rust_at_one
-A small web project with the hopes of getting out on the web one day
+# rust_at_one 🦀🍾🥂
+Let's learn together!
 
-## About
-My intent is not to build something big, but instead just have a project to play around with.
+## About 💁💁‍♂️
+This project is meant to be sort of a template to look at for future project.
+It will contain everything you might need to start running an application in production.
+Authentication, authorization, DB connections, containerization, Rest, Graphql etc
 
-### setup
+It does a lot but it might help to have an overview of an application that is actually in use somewhere and works.
+Even though it might not be the best todo app you have ever seen.
 
-.env file like 
+### Setup 🛠🔋
+Checkout `setup.sh`, it contains everything you need. 
 
-`RUST_BACKTRACE=1;
-IP_ADDRESS=0.0.0.0:8000
-MONGODB_URI=mongodb://root:example@localhost:27017/
-DB_NAME=rust_at_one
-KEY_PEM=nopass.pem
-CERT_PEM=cert.pem`
+To set it all up: `bash setup.sh`
 
-There should be a test.env in the main folder beside .env for integration testing purposes.
-
-I'm using docker with a mongo instance for local development. run `docker-compose -f stack.yml up`.
-
-to create a self-signed temporary cert for testing:
-`openssl req -x509 -newkey rsa:4096 -nodes -keyout key.pem -out cert.pem -days 365 -subj '/CN=localhost'`
-`openssl rsa -in key.pem -out nopass.pem`
+To run using docker: `docker-compose -f stack.yml up`.

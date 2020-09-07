@@ -1,5 +1,5 @@
-/target
-*.env
-*.pem
-.idea
-.vscode
+**/target
+**/.idea
+**/.vscode
+**/*.env
+**/*.pem

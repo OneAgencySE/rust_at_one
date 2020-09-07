@@ -1,0 +1,11 @@
+**/.dockerignore
+**/*.env
+**/.git
+**/.gitignore
+**/.vscode
+**/.idea
+**/*.pem
+**/README.md
+**/target
+**/.sh
+stack.yml
