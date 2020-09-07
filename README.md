@@ -1,6 +1,8 @@
 # rust_at_one 🦀🍾🥂
 Let's learn together!
 
+[![Build Status](https://dev.azure.com/alexanderherlin/RustAtOne/_apis/build/status/OneAgencySE.rust_at_one?branchName=azure-pipelines)](https://dev.azure.com/alexanderherlin/RustAtOne/_build/latest?definitionId=3&branchName=azure-pipelines)
+
 ## About 💁💁‍♂️
 This project is meant to be sort of a template to look at for future project.
 It will contain everything you might need to start running an application in production.
