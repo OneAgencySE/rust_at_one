@@ -12,27 +12,55 @@ use rust_at_one::{AppConfig, AppEnv, AppState};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 
+macro_rules! map(
+    { $($key:expr => $value:expr),+ } => {
+        {
+            let mut m = ::std::collections::HashMap::new();
+            $(
+                m.insert($key, $value);
+            )+
+            m
+        }
+     };
+);
+
 #[cfg(test)]
 mod tests {
     use crate::{ReqVerb, TestService};
     use actix_web::http::StatusCode;
     use rstest::*;
     use rust_at_one::documents::Post;
+    use std::collections::HashMap;
     use uuid::Uuid;
 
+    fn into_query<K, V>(input: &HashMap<K, V>) -> String
+    where
+        K: std::fmt::Display,
+        V: std::fmt::Display,
+    {
+        input
+            .iter() // Might be better of ending this with "as_str()" instead of borrowing with "&"
+            .map(|s| format!("&{}={}", s.0, s.1))
+            .collect::<String>()
+    }
+
     #[rstest(
-        url,
+        query_params,
         count,
-        case("/api/posts?name=jibberIsh87", 0),
-        case("/api/posts?name=One", 5), // collides should be 1
-        case("/api/posts", 10), // Collides should be 5
-        case("/api/posts?number=1&count=2", 2),
-        case("/api/posts?number=2&count=2", 2) // Collides should be 1
+        case(map!{"name" => "jibberIsh87"}, 0),
+        case(map!{"name" => "One"}, 1),
+        case(HashMap::new(), 5), 
+        case(map!{"number" => "1", "count" => "2"}, 2),
+        case(map!{"number" => "2", "count" => "1"}, 1)
     )]
     #[actix_rt::test]
-    async fn post_get_many(url: &str, count: usize) {
+    async fn post_get_many(query_params: HashMap<&str, &str>, count: usize) {
+        let url = "/api/posts";
         let mut service = TestService::init("post".to_string()).await;
         let id = Uuid::new_v4().to_string();
+        let mut query_params = query_params;
+        query_params.insert("author", id.as_str());
+
         service
             .insert(vec![
                 Post {
@@ -62,7 +90,11 @@ mod tests {
                 },
             ])
             .await;
-        let r = ReqVerb::Get::<String>(url);
+
+        let query_string = into_query(&query_params);
+        let url = format!("{}?{}", url, query_string.as_str());
+        dbg!(url.as_str());
+        let r = ReqVerb::Get::<String>(url.as_str());
         let resp: (Vec<Post>, StatusCode) = service.make_req(r).await;
         service.clean_up().await;
 
