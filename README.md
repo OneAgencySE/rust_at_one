@@ -1,7 +1,8 @@
 # rust_at_one 🦀🍾🥂
 Let's learn together!
 
-[![Build Status](https://dev.azure.com/alexanderherlin/RustAtOne/_apis/build/status/OneAgencySE.rust_at_one?branchName=azure-pipelines)](https://dev.azure.com/alexanderherlin/RustAtOne/_build/latest?definitionId=3&branchName=azure-pipelines)
+[![Build Status](https://dev.azure.com/alexanderherlin/RustAtOne/_apis/build/status/OneAgencySE.rust_at_one?branchName=master)](https://dev.azure.com/alexanderherlin/RustAtOne/_build/latest?definitionId=3&branchName=master)
+[![Build Status](https://vsrm.dev.azure.com/alexanderherlin/_apis/public/Release/badge/78ab4ad5-d031-44da-a117-664e061e01f6/1/1)](https://vsrm.dev.azure.com/alexanderherlin/_apis/public/Release/badge/78ab4ad5-d031-44da-a117-664e061e01f6/1/1)
 
 ## About 💁💁‍♂️
 This project is meant to be sort of a template to look at for future project.

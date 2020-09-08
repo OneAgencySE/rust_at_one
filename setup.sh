@@ -5,17 +5,29 @@ if [ ! -f ".env" ]; then
 
     # File used when running cargo run
     echo "RUST_BACKTRACE=1;
-    MONGODB_URI=mongodb://kronk:5RwjSCNN@localhost:27017/
-    DB_NAME=rust_at_one
-    KEY_PEM=certs/nopass.pem
-    CERT_PEM=certs/cert.pem" > .env
+MONGODB_URI=mongodb://kronk:5RwjSCNN@localhost:27017/
+DB_NAME=rust_at_one
+
+USE_SSL=true
+KEY_PEM=certs/nopass.pem
+CERT_PEM=certs/cert.pem
+
+USE_LE=false
+LE_EMAIL=NotUsed
+LE_DOMAIN=NotUsed" > .env
 
     # File used for integration testing
     echo "RUST_BACKTRACE=1;
-    MONGODB_URI=mongodb://kronk:5RwjSCNN@localhost:27017/
-    DB_NAME=rust_at_one_test
-    KEY_PEM=certs/nopass.pem
-    CERT_PEM=certs/cert.pem" > test.env
+MONGODB_URI=mongodb://kronk:5RwjSCNN@localhost:27017/
+DB_NAME=rust_at_one_test
+
+USE_SSL=true
+KEY_PEM=certs/nopass.pem
+CERT_PEM=certs/cert.pem
+
+USE_LE=false
+LE_EMAIL=NotUsed
+LE_DOMAIN=NotUsed" > test.env
 fi
 
 if [ ! -d "certs" ]; then

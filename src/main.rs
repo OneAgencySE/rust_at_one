@@ -12,16 +12,24 @@ async fn main() -> Result<()> {
 async fn run_application(config: AppConfig) -> Result<()> {
     let mongo = Mongo::initialize(config.mongo_db_uri.as_str(), config.db_name.as_str()).await?;
     let app_state = AppState::new(&mongo).wrap();
-    let ssl = ssl_builder(config.cert_pem.as_str(), config.key_pem.as_str())?;
 
-    HttpServer::new(move || {
+    let mut server = HttpServer::new(move || {
         let m = App::new()
             .app_data(app_state.clone())
             .service(web::scope("/api").configure(configure_routes));
         m
-    })
-    .bind_openssl("0.0.0.0:8000", ssl)?
-    .run()
-    .await
-    .map_err(|c| c.into())
+    });
+
+    if let Some(c) = config.ssl_conf {
+        let ssl = ssl_builder(c.cert_pem.as_str(), c.key_pem.as_str())?;
+        if let Some(le) = c.lets_encrypt {
+            // TODO: Let's encrypt
+            dbg!(&le);
+        }
+        server = server.bind_openssl("0.0.0.0:8000", ssl)?;
+    } else {
+        server = server.bind("0.0.0.0:8000")?;
+    };
+
+    server.run().await.map_err(|c| c.into())
 }
