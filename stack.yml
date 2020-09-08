@@ -39,5 +39,9 @@ services:
       RUST_BACKTRACE: 1;
       MONGODB_URI: mongodb://kronk:5RwjSCNN@mongo:27017/
       DB_NAME: rust_at_one
+      USE_SSL: true
       KEY_PEM: /certs/nopass.pem
       CERT_PEM: /certs/cert.pem
+      USE_LE: false
+      LE_EMAIL: NotUsed
+      LE_DOMAIN: NotUsed
