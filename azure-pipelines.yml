@@ -3,10 +3,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- master
+  - master
 
 resources:
-- repo: self
+  - repo: self
 
 variables:
   # Container registry service connection established during pipeline creation
@@ -14,26 +14,53 @@ variables:
   imageRepository: 'rustatone'
   containerRegistry: 'rustatonecr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
-  
+  tag: '$(Build.SourceBranchName).$(Build.BuildId)'
+
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
 stages:
-- stage: Build
-  displayName: Build and push stage
-  jobs:  
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+  - stage: Build
+    displayName: Build, Test, Cover, Release!
+    jobs:
+      - job: Test
+        displayName: Build, Test, Release
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - task: Bash@3
+            displayName: Test and generate report
+            env:
+              MONGODB_URI: $(MONGODB_URI)
+              DB_NAME: $(DB_NAME)
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo $(MONGODB_URI)
+                echo $(DB_NAME)
+                docker run -e MONGODB_URI=$(MONGODB_URI) -e DB_NAME=$(DB_NAME) --security-opt seccomp=unconfined -v "${PWD}:/volume" xd009642/tarpaulin
+
+          - task: Bash@3
+            displayName: Publish to CodeCov.io
+            env:
+              CODECOV_TOKEN: $(CODECOV_TOKEN)
+            inputs:
+              targetType: 'inline'
+              script: |
+                bash <(curl -s https://codecov.io/bash)
+
+          - task: PublishCodeCoverageResults@1
+            displayName: Publish to Azure Pipeline
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: 'cobertura.xml'
+
+          - task: Docker@2
+            displayName: Build & Push
+            inputs:
+              command: buildAndPush
+              repository: $(imageRepository)
+              dockerfile: $(dockerfilePath)
+              containerRegistry: $(dockerRegistryServiceConnection)
+              tags: |
+                $(tag)

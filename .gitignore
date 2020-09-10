@@ -3,3 +3,5 @@
 **/.vscode
 **/*.env
 **/*.pem
+cobertura.xml
+tarpaulin-report.html

@@ -46,7 +46,7 @@ pub struct LetsEncryptConf {
 
 pub enum AppEnv<'a> {
     Default,
-    FromFile(&'a str),
+    TryFromFile(&'a str),
 }
 
 impl AppConfig {
@@ -55,8 +55,12 @@ impl AppConfig {
             AppEnv::Default => {
                 dotenv().ok();
             }
-            AppEnv::FromFile(s) => {
-                dotenv::from_filename(s).ok();
+            AppEnv::TryFromFile(s) => {
+                if std::fs::File::open(s).is_ok() {
+                    dotenv::from_filename(s).ok();
+                } else {
+                    dotenv().ok();
+                }
             }
         };
 
@@ -150,41 +154,6 @@ mod tests {
     use super::*;
     use dotenv::{self, Error};
     use std::{fs::File, io::Write};
-
-    #[test]
-    fn app_conf_env() {
-        let mut file = File::create("app_conf_env.env").unwrap();
-        file.write_all(
-            b"
-MONGODB_URI=a
-DB_NAME=b
-USE_SSL=true
-USE_LE=true
-LE_EMAIL=e
-LE_DOMAIN=d
-KEY_PEM=k
-CERT_PEM=c",
-        )
-        .unwrap();
-        dotenv::from_filename("app_conf_env.env").ok();
-
-        let exp = AppConfig {
-            mongo_db_uri: "a".to_string(),
-            db_name: "b".to_string(),
-            ssl_conf: Some(SSLConf {
-                lets_encrypt: Some(LetsEncryptConf {
-                    email: "e".to_string(),
-                    domain: "d".to_string(),
-                }),
-                key_pem: "k".to_string(),
-                cert_pem: "c".to_string(),
-            }),
-        };
-
-        let conf = AppConfig::new(AppEnv::FromFile("app_conf_env.env"));
-        std::fs::remove_file("app_conf_env.env").unwrap();
-        assert_eq!(conf, exp);
-    }
 
     #[test]
     fn app_conf_ssl_no_le() {

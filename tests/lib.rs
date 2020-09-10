@@ -49,7 +49,7 @@ mod tests {
         count,
         case(map!{"name" => "jibberIsh87"}, 0),
         case(map!{"name" => "One"}, 1),
-        case(HashMap::new(), 5), 
+        case(HashMap::new(), 5),
         case(map!{"number" => "1", "count" => "2"}, 2),
         case(map!{"number" => "2", "count" => "1"}, 1)
     )]
@@ -119,7 +119,7 @@ struct TestService {
 
 impl TestService {
     pub async fn init(collection: String) -> Self {
-        let config = AppConfig::new(AppEnv::FromFile("test.env"));
+        let config = AppConfig::new(AppEnv::TryFromFile("test.env"));
 
         let mongo = Mongo::initialize(config.mongo_db_uri.as_str(), config.db_name.as_str())
             .await

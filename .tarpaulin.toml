@@ -1,0 +1,9 @@
+[report]
+out = ["Html", "Xml"]
+
+[test_config]
+force_clean = true
+verbose = true
+all_features = true
+all = true
+line = true
