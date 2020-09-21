@@ -1177,7 +1177,6 @@ dependencies = [
 name = "macros"
 version = "0.1.0"
 dependencies = [
- "proc-macro2 1.0.21",
  "quote 1.0.7",
  "syn 1.0.41",
 ]
