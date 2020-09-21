@@ -1,4 +1,4 @@
-use super::{DocumentService, Dto, Query};
+use super::{DocumentService};
 use crate::{documents::Post, mongo::Mongo};
 use async_trait::async_trait;
 use mongodb::{bson::Document, Collection};
@@ -32,18 +32,3 @@ impl From<Post> for Option<Document> {
     }
 }
 
-impl Query for Post {
-    fn from_string_id(id: String) -> Self {
-        Post {
-            id: Some(id),
-            name: None,
-            author: None,
-        }
-    }
-}
-
-// impl Dto for Post {
-//     fn set_id(&mut self, id: String) {
-//         self.id = Some(id)
-//     }
-// }

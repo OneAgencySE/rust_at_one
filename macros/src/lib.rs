@@ -24,3 +24,25 @@ pub fn dto_derive(input: TokenStream) -> TokenStream {
 
     TokenStream::from(expanded)
 }
+
+#[proc_macro_derive(Query)]
+pub fn query_derive(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+
+    // get the name of the type we want to implement the trait for
+    let name = &input.ident;
+
+    let expanded = quote! {
+        impl crate::services::Query for #name {
+            fn from_string_id(id: String) -> Self {
+                Post {
+                    id: Some(id),
+                    name: None,
+                    author: None,
+                }
+            }
+        }
+    };
+
+    TokenStream::from(expanded)
+}
