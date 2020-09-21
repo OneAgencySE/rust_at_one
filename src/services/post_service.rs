@@ -42,8 +42,8 @@ impl Query for Post {
     }
 }
 
-impl Dto for Post {
-    fn set_id(&mut self, id: String) {
-        self.id = Some(id)
-    }
-}
+// impl Dto for Post {
+//     fn set_id(&mut self, id: String) {
+//         self.id = Some(id)
+//     }
+// }

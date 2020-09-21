@@ -2,9 +2,10 @@ use crate::mongo::Mongo;
 use mongodb::bson::{doc, Document};
 use mongodb::options::UpdateModifications;
 use serde::{Deserialize, Serialize};
+use macros::Dto;
 
 /// Data model for Post
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Dto)]
 pub struct Post {
     /// Mongodb id: _id
     pub id: Option<String>,
