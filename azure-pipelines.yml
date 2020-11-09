@@ -30,16 +30,12 @@ stages:
         steps:
           - task: Bash@3
             displayName: Test and generate report
-            env:
-              MONGODB_URI: $(MONGODB_URI)
-              DB_NAME: $(DB_NAME)
             inputs:
               targetType: 'inline'
               script: |
-                echo $(MONGODB_URI)
-                echo $(DB_NAME)
-                docker run -e MONGODB_URI=$(MONGODB_URI) -e DB_NAME=$(DB_NAME) --security-opt seccomp=unconfined -v "${PWD}:/volume" xd009642/tarpaulin
-
+                docker run -d -p 27017:27017 --name mongodb -e MONGO_INITDB_ROOT_USERNAME=kronk -e MONGO_INITDB_ROOT_PASSWORD=5RwjSCNN mongo
+                docker run -e MONGODB_URI=mongodb://kronk:5RwjSCNN@mongodb:27017/ -e DB_NAME=foo --security-opt seccomp=unconfined -v "${PWD}:/volume" xd009642/tarpaulin
+                docker stop mongodb && docker rm mongodb
           - task: Bash@3
             displayName: Publish to CodeCov.io
             env:

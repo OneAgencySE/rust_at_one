@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   mongo:
@@ -22,26 +22,25 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: kronk
       ME_CONFIG_MONGODB_ADMINPASSWORD: 5RwjSCNN
-
-  rustatone:
-    image: rustatone
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    deploy:
-      replicas: 1
-    ports:
-      - 8000:8000
-    volumes:
-      - ./certs:/certs:ro
-    environment:
-      RUST_BACKTRACE: 1;
-      MONGODB_URI: mongodb://kronk:5RwjSCNN@mongo:27017/
-      DB_NAME: rust_at_one
-      USE_SSL: "true"
-      KEY_PEM: /certs/nopass.pem
-      CERT_PEM: /certs/cert.pem
-      USE_LE: "false"
-      LE_EMAIL: NotUsed
-      LE_DOMAIN: NotUsed
+  # rustatone:
+  #   image: rustatone
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   deploy:
+  #     replicas: 1
+  #   ports:
+  #     - 8000:8000
+  #   volumes:
+  #     - ./certs:/certs:ro
+  #   environment:
+  #     RUST_BACKTRACE: 1;
+  #     MONGODB_URI: mongodb://kronk:5RwjSCNN@mongo:27017/
+  #     DB_NAME: rust_at_one
+  #     USE_SSL: "true"
+  #     KEY_PEM: /certs/nopass.pem
+  #     CERT_PEM: /certs/cert.pem
+  #     USE_LE: "false"
+  #     LE_EMAIL: NotUsed
+  #     LE_DOMAIN: NotUsed
