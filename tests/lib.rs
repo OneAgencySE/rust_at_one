@@ -191,7 +191,7 @@ impl TestService {
 
         let response = test::call_service(&mut app, req).await;
         let status = response.status().clone();
-        let m: Bytes = test::read_body(response).await;
+        let m: actix_web::web::Bytes = test::read_body(response).await;
         let model: Out = serde_json::from_str(std::str::from_utf8(&m).unwrap()).unwrap();
 
         (model, status)

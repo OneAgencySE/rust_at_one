@@ -1,22 +1,13 @@
-use actix_web::{web, App, HttpServer};
+use actix_web::middleware::Logger;
+use actix_web::{middleware, web, App, HttpServer};
 use rust_at_one::{
     handlers::configure_routes, mongo::Mongo, ssl_builder, AppConfig, AppEnv, AppState, Result,
 };
-use tracing::Level;
-use tracing_subscriber::FmtSubscriber;
 
 #[actix_rt::main]
 async fn main() -> Result<()> {
-    let subscriber = FmtSubscriber::builder()
-        // all spans/events with a level higher than TRACE (e.g, debug, info, warn, etc.)
-        // will be written to stdout.
-        .with_max_level(Level::TRACE)
-        // completes the builder.
-        .finish();
-
-    tracing::subscriber::set_global_default(subscriber).expect("setting default subscriber failed");
-
     let config = AppConfig::new(AppEnv::Default);
+    env_logger::init();
     run_application(config).await
 }
 
@@ -26,6 +17,9 @@ async fn run_application(config: AppConfig) -> Result<()> {
 
     let mut server = HttpServer::new(move || {
         let m = App::new()
+            .wrap(Logger::default())
+            .wrap(Logger::new("%a %{User-Agent}i"))
+            .wrap(middleware::DefaultHeaders::new().header("X-Version", "0.2"))
             .app_data(app_state.clone())
             .service(web::scope("/api").configure(configure_routes));
         m

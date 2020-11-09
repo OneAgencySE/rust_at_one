@@ -1,4 +1,4 @@
-#[warn(missing_debug_implementations, rust_2018_idioms, missing_docs)]
+#[warn(missing_debug_implementations, missing_docs)]
 
 /// Module for documents/models
 pub mod documents;
@@ -14,11 +14,10 @@ pub mod services;
 use actix_web::web;
 use dotenv::dotenv;
 use error::AppError;
+use log::info;
 use mongo::Mongo;
 use openssl::ssl::{SslAcceptor, SslAcceptorBuilder, SslFiletype, SslMethod};
-use serde::Serialize;
 use services::{post_service::PostService, DocumentService};
-use tracing::info;
 pub type Result<T, E = AppError> = core::result::Result<T, E>;
 
 /// Configuration for the application
@@ -156,7 +155,6 @@ impl<'a> AppState {
 mod tests {
     use super::*;
     use dotenv::{self, Error};
-    use std::{fs::File, io::Write};
 
     #[test]
     fn app_conf_ssl_no_le() {
