@@ -65,7 +65,6 @@ impl AppConfig {
             }
         };
 
-<<<<<<< HEAD
         Self::create(
             dotenv::var("MONGODB_URI"),
             dotenv::var("DB_NAME"),
@@ -121,19 +120,8 @@ impl AppConfig {
             }
             config.ssl_conf = Some(ssl_conf);
         }
+        info!("Running with {:?}", config);
         config
-=======
-        let conf = AppConfig {
-            mongo_db_uri: dotenv::var("MONGODB_URI").unwrap(),
-            db_name: dotenv::var("DB_NAME").unwrap(),
-            cert_pem: dotenv::var("CERT_PEM").unwrap(),
-            key_pem: dotenv::var("KEY_PEM").unwrap(),
-            ip_address: dotenv::var("IP_ADDRESS").unwrap(),
-        };
-
-        info!("Running with {:?}", conf);
-        conf
->>>>>>> WIP: Set up tracing, todo: middleware
     }
 }
 

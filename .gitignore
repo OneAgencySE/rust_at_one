@@ -3,5 +3,6 @@
 **/.vscode
 **/*.env
 **/*.pem
+**/certs
 cobertura.xml
 tarpaulin-report.html
