@@ -54,13 +54,12 @@ stages:
             inputs:
               codeCoverageTool: 'Cobertura'
               summaryFileLocation: 'cobertura.xml'
-
-          - task: Docker@2
-            displayName: Build & Push
-            inputs:
-              command: buildAndPush
-              repository: $(imageRepository)
-              dockerfile: $(dockerfilePath)
-              containerRegistry: $(dockerRegistryServiceConnection)
-              tags: |
-                $(tag)
+          # - task: Docker@2
+          #   displayName: Build & Push
+          #   inputs:
+          #     command: buildAndPush
+          #     repository: $(imageRepository)
+          #     dockerfile: $(dockerfilePath)
+          #     containerRegistry: $(dockerRegistryServiceConnection)
+          #     tags: |
+          #       $(tag)
